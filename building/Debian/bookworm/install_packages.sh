@@ -4,6 +4,9 @@
 # Install Debian/Ubuntu packages for building MoonRay
 # source this script in bash
 
+# --trace-expand ./path/to/cmakefiles.txt > trace.txt 2>&1
+# to get outputs
+
 install_qt=1
 install_cuda=1
 install_cgroup=1
@@ -37,19 +40,21 @@ then
     # dnf install -y cuda-runtime-11-8 cuda-toolkit-11-8
 fi
 
-apt-get install libglvnd-dev
+apt-get -y install build-essential
 
-apt-get install build-essential
+apt-get -y install libglvnd-dev
 
-apt-get install bison flex wget git python3 python3-dev patch \
-               libgif-dev libmng-dev libtiff5-dev libjpeg68-turbo-dev \
+apt-get -y install bison flex wget git python3 python3-dev patch \
+               libgif-dev libmng-dev libtiff5-dev libjpeg62-turbo-dev \
                libatomic1 uuid-dev openssl libcurl4-openssl-dev \
-               libfreetype-dev
+               libfreetype-dev 
+               
+apt-get -y python-is-python3 python3-jinja2
 
 # dnf install -y lsb_release
 
-mkdir -p /installs/{bin,lib,include}
-cd /installs
+# mkdir -p /installs/{bin,lib,include}
+# cd /installs
 
 # if [ $install_cgroup -eq 1 ] 
 # then
@@ -59,23 +64,24 @@ cd /installs
 #     dnf install libcgroup-devel-0.42.2-5.el9.x86_64.rpm -y
 # fi
 
-wget https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-linux-x86_64.tar.gz
-tar xzf cmake-3.23.1-linux-x86_64.tar.gz
+# wget https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-linux-x86_64.tar.gz
+# tar xzf cmake-3.23.1-linux-x86_64.tar.gz
+apt-get -y install cmake #3.25.1
 
-apt-get install libblosc-dev
-apt-get install libboost1.81-all-dev
+apt-get -y install libblosc-dev
+apt-get -y install libboost1.81-all-dev
 # dnf install -y lua lua-libs lua-devel #5.4.4
-apt-get install lua5.4 liblua5.4-dev
+apt-get -y install lua5.4 liblua5.4-dev
 # dnf install -y openvdb openvdb-libs openvdb-devel #9.1.0
-apt-get install libopenvdb-dev
+apt-get -y install libopenvdb-dev
 # dnf install -y tbb tbb-devel python3-tbb #2020.3
-apt-get install libtbb-dev
+apt-get -y install libtbb-dev
 # dnf install -y log4cplus log4cplus-devel #2.0.5
-apt-get install liblog4cplus-dev
+apt-get -y install liblog4cplus-dev
 # dnf install -y cppunit cppunit-devel #1.15.1
-apt-get install libcppunit-dev
+apt-get -y install libcppunit-dev
 # dnf install -y libmicrohttpd libmicrohttpd-devel #0.9.72
-apt-get install libmicrohttpd-dev
+apt-get -y install libmicrohttpd-dev
 
 # not required if you are not building the GUI apps
 if [ $install_qt -eq 1 ]

@@ -16,6 +16,7 @@ set(InstallRoot /opt/MoonRay/installs CACHE FILEPATH "Install root for dependenc
 ExternalProject_Add(JsonCpp
     GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
     GIT_TAG 5defb4ed1a4293b8e2bf641e16b156fb9de498cc # 1.9.5
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -29,6 +30,7 @@ set(CHAIN JsonCpp)
 ExternalProject_Add(OpenSubdiv
     GIT_REPOSITORY https://github.com/PixarAnimationStudios/OpenSubdiv
     GIT_TAG 8ffa2b6566be10209529d7a0d1db02a0796b160c # v3_5_0
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -44,7 +46,8 @@ set(CHAIN OpenSubdiv)
 ExternalProject_Add(OpenEXR
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openexr
     GIT_TAG 8bc3741131db146ad08a5b83af9e6e48f0e94a03 # v2.5.7
-    PATCH_COMMAND patch IlmBase/Half/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/../Imath_include_paths.patch
+    PATCH_COMMAND patch IlmBase/Half/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/../../Imath_include_paths.patch
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -59,6 +62,7 @@ ExternalProject_Add(Random123
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_COMMAND make install-include prefix=${InstallRoot}
     DEPENDS ${CHAIN}
 )
@@ -69,6 +73,7 @@ ExternalProject_Add(ISPC
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_COMMAND cp bin/ispc ${InstallRoot}/bin
     DEPENDS ${CHAIN}
 )
@@ -77,6 +82,7 @@ set(CHAIN ISPC)
 ExternalProject_Add(embree
     GIT_REPOSITORY https://github.com/embree/embree
     GIT_TAG 341ef8c45d1ae072ead1ab65cd76e88b03d9302c # v4.2.0
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -94,6 +100,8 @@ set(CHAIN embree)
 ExternalProject_Add(OpenColorIO
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/OpenColorIO
     GIT_TAG 056b7b0cb0d087961e9dba75104820e44faf52a1 # v2.0.2
+    PATCH_COMMAND patch src/OpenColorIO/FileRules.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../opencolorio-2.0.2-gcc12.patch
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DOCIO_BUILD_APPS=OFF
@@ -112,18 +120,22 @@ set(CHAIN OpenColorIO)
 ExternalProject_Add(OpenImageIO
     GIT_REPOSITORY https://github.com/OpenImageIO/oiio
     GIT_TAG 331a323468928c8017ad048b26d47c4e57a724a7 # 2.3.20.0
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DOpenEXR_ROOT=<INSTALL_DIR>
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
         -DUSE_QT=0
         -DUSE_PYTHON=0
+        -DOIIO_BUILD_TOOLS=0
+        -DOIIO_BUILD_TESTS=0
     DEPENDS ${CHAIN}
 )
 set(CHAIN OpenImageIO)
 
 ExternalProject_Add(OpenImageDenoise
     URL https://github.com/OpenImageDenoise/oidn/releases/download/v2.0.1/oidn-2.0.1.src.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -137,7 +149,8 @@ set(CHAIN OpenImageDenoise)
 if(NOT NO_USD)
     ExternalProject_Add(USD
         GIT_REPOSITORY https://github.com/PixarAnimationStudios/USD
-        GIT_TAG 0c7b9a95f155c221ff7df9270a39a52e3b23af8b # v22.11
+        GIT_TAG 0b18ad3f840c24eb25e16b795a5b0821cf05126e # v23.11
+        DOWNLOAD_EXTRACT_TIMESTAMP True
         INSTALL_DIR ${InstallRoot}
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
@@ -151,7 +164,7 @@ if(NOT NO_USD)
             -DTBB_USE_DEBUG_BUILD=OFF
             -DTBB_ROOT_DIR=/usr
             -DTBB_LIBRARIES=/usr/lib64
-            -DTBB_INCLUDE_DIRS=/usr/include ..
+            -DTBB_INCLUDE_DIRS=/usr/include
             -DPXR_BUILD_TESTS=OFF
             -DPXR_BUILD_EXAMPLES=OFF
             -DPXR_BUILD_TUTORIALS=OFF
