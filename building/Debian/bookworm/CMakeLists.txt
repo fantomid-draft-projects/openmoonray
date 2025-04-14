@@ -146,7 +146,19 @@ ExternalProject_Add(OpenImageDenoise
 )
 set(CHAIN OpenImageDenoise)
 
-# TODOInstall TBB 2020.3
+ExternalProject_Add(TBB
+    GIT_REPOSITORY https://github.com/uxlfoundation/oneTBB
+    GIT_TAG eca91f16d7490a8abfdee652dadf457ec820cc37 # v2020.3
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make tbb tbbmalloc tbbproxy
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    INSTALL_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install_tbb_2020.3.sh ${CMAKE_CURRENT_BINARY_DIR} ${InstallRoot} 
+    DEPENDS ${CHAIN}
+)
+set(CHAIN TBB)
+
 if(NOT NO_USD)
     ExternalProject_Add(USD
         GIT_REPOSITORY https://github.com/PixarAnimationStudios/USD
@@ -164,9 +176,9 @@ if(NOT NO_USD)
             -DBoost_LIBRARY_DIR=/usr/lib64
             -DBoost_INCLUDE_DIR=/usr/include
             -DTBB_USE_DEBUG_BUILD=OFF
-            -DTBB_ROOT_DIR=/usr
-            -DTBB_LIBRARIES=/usr/lib64
-            -DTBB_INCLUDE_DIRS=/usr/include
+            -DTBB_ROOT_DIR=${InstallRoot}
+            -DTBB_LIBRARIES=${InstallRoot}/lib
+            -DTBB_INCLUDE_DIRS=${InstallRoot}/include
             -DPXR_BUILD_TESTS=OFF
             -DPXR_BUILD_EXAMPLES=OFF
             -DPXR_BUILD_TUTORIALS=OFF
