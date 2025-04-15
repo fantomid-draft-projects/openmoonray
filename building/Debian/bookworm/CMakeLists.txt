@@ -27,6 +27,30 @@ ExternalProject_Add(JsonCpp
 )
 set(CHAIN JsonCpp)
 
+ExternalProject_Add(Boost
+    URL https://sourceforge.net/projects/boost/files/boost/1.78.0/boost_1_78_0.tar.gz
+    UPDATE_COMMAND ./bootstrap.sh --prefix=${InstallRoot}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ./b2 install ${JOBS_ARG} --with_python variant=release link=shared threading=multi define=BOOST_UNORDERED_HAVE_PIECEWISE_CONSTRUCT=0
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND ""
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    DEPENDS ${CHAIN}
+)
+set(CHAIN Boost)
+
+ExternalProject_Add(TBB
+    GIT_REPOSITORY https://github.com/uxlfoundation/oneTBB
+    GIT_TAG eca91f16d7490a8abfdee652dadf457ec820cc37 # v2020.3
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make tbb tbbmalloc tbbproxy ${JOBS_ARG}
+    INSTALL_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install_tbb_2020.3.sh ${CMAKE_CURRENT_BINARY_DIR} ${InstallRoot} 
+    DEPENDS ${CHAIN}
+)
+set(CHAIN TBB)
+
 ExternalProject_Add(OpenSubdiv
     GIT_REPOSITORY https://github.com/PixarAnimationStudios/OpenSubdiv
     GIT_TAG 8ffa2b6566be10209529d7a0d1db02a0796b160c # v3_5_0
@@ -146,19 +170,6 @@ ExternalProject_Add(OpenImageDenoise
 )
 set(CHAIN OpenImageDenoise)
 
-ExternalProject_Add(TBB
-    GIT_REPOSITORY https://github.com/uxlfoundation/oneTBB
-    GIT_TAG eca91f16d7490a8abfdee652dadf457ec820cc37 # v2020.3
-    DOWNLOAD_EXTRACT_TIMESTAMP True
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND make tbb tbbmalloc tbbproxy
-    DOWNLOAD_EXTRACT_TIMESTAMP True
-    INSTALL_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install_tbb_2020.3.sh ${CMAKE_CURRENT_BINARY_DIR} ${InstallRoot} 
-    DEPENDS ${CHAIN}
-)
-set(CHAIN TBB)
-
 if(NOT NO_USD)
     ExternalProject_Add(USD
         GIT_REPOSITORY https://github.com/PixarAnimationStudios/USD
@@ -173,8 +184,8 @@ if(NOT NO_USD)
             -DPXR_USE_PYTHON_3=ON
             -DPYTHON_LIBRARIES=/usr/lib64
             -DPYTHON_INCLUDE_DIRS=/usr/include
-            -DBoost_LIBRARY_DIR=/usr/lib64
-            -DBoost_INCLUDE_DIR=/usr/include
+            -DBoost_LIBRARY_DIR=${InstallRoot}/lib
+            -DBoost_INCLUDE_DIR=${InstallRoot}/include
             -DTBB_USE_DEBUG_BUILD=OFF
             -DTBB_ROOT_DIR=${InstallRoot}
             -DTBB_LIBRARIES=${InstallRoot}/lib
