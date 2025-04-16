@@ -13,8 +13,8 @@
 #
 
 install_qt=1
-install_cuda=1
-install_cgroup=1
+install_cuda=0
+#install_cgroup=1
 for i in "$@" 
 do
 case ${i,,} in
@@ -24,9 +24,9 @@ case ${i,,} in
     --nocuda|-nocuda)
         install_cuda=0
     ;;
-    --nocgroup|-nocgroup)
-        install_cgroup=0
-    ;;
+#    --nocgroup|-nocgroup)
+#        install_cgroup=0
+#    ;;
     *)
         echo "Unknown option: $i"
         return 1
@@ -45,21 +45,21 @@ then
     # dnf install -y cuda-runtime-11-8 cuda-toolkit-11-8
 fi
 
-apt-get -y install build-essential
+apt-get -y install build-essential git
 
 apt-get -y install libglvnd-dev
 
 apt-get -y install bison flex wget git python3 python3-dev patch \
                libgif-dev libmng-dev libtiff5-dev libjpeg62-turbo-dev \
                libatomic1 uuid-dev openssl libcurl4-openssl-dev \
-               libfreetype-dev 
+               libfreetype-dev libssl-dev libjemalloc-dev libimath-dev
                
-apt-get -y install python-is-python3 python3-jinja2 python3-pip pyside2-tools qtbase5-dev-tools
+apt-get -y install python-is-python3 python3-jinja2 python3-pip pyside2-tools python3-numpy qtbase5-dev-tools
 
 # dnf install -y lsb_release
 
-# mkdir -p /installs/{bin,lib,include}
-# cd /installs
+mkdir -p /installs/{bin,lib,include}
+cd /installs
 
 # if [ $install_cgroup -eq 1 ] 
 # then
@@ -78,7 +78,7 @@ apt-get -y install libblosc-dev
 # dnf install -y lua lua-libs lua-devel #5.4.4
 apt-get -y install lua5.4 liblua5.4-dev
 # dnf install -y openvdb openvdb-libs openvdb-devel #9.1.0
-apt-get -y install libopenvdb-dev
+# apt-get -y install libopenvdb-dev
 # dnf install -y tbb tbb-devel python3-tbb #2020.3
 # TODO install from repo with version 2020.3 
 # apt-get -y install libtbb-dev python3-numpy
@@ -96,5 +96,7 @@ then
 #    dnf install -y qt5-qtbase-devel qt5-qtscript-devel
 fi
 
-export PATH=/usr/local/cuda/bin:${PATH}
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+if [ $install_cuda -eq 1 ]
+	export PATH=/usr/local/cuda/bin:${PATH}
+	export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+fi

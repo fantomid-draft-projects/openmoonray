@@ -19,6 +19,4 @@ CC_VERSION=`cc --version | grep "Debian" | cut -d" " -f4`
 BUILD_DIR=`ls $1/TBB-prefix/src/TBB/build | grep $CC_VERSION`
 
 echo "Copy TBB $BUILD_DIR lib's files"
-cp $1/TBB-prefix/src/TBB/build/$BUILD_DIR/libtbb.so.2 $2/lib/libtbb.so.2
-cp $1/TBB-prefix/src/TBB/build/$BUILD_DIR/libtbbmalloc.so.2 $2/lib/libtbbmalloc.so.2
-cp $1/TBB-prefix/src/TBB/build/$BUILD_DIR/libtbbmalloc_proxy.so.2 $2/lib/libtbbmalloc_proxy.so.2
+cp $1/TBB-prefix/src/TBB/build/$BUILD_DIR/libtbb* $2/lib/
