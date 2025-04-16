@@ -66,6 +66,7 @@ set(CHAIN Random123)
 ExternalProject_Add(OpenVDB
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openvdb
     GIT_TAG ab935574cdb25c3df66b068fce2a3b0a74281c54 # v9.1.0
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/../openvdb-9.1.0.patch
     INSTALL_DIR ${InstallRoot}
     DOWNLOAD_EXTRACT_TIMESTAMP True
     CMAKE_ARGS
