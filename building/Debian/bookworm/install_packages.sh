@@ -51,7 +51,7 @@ apt-get -y install libglvnd-dev
 
 apt-get -y install bison flex wget git python3 python3-dev patch \
                libgif-dev libmng-dev libtiff5-dev libjpeg62-turbo-dev \
-               libatomic1 uuid-dev openssl libcurl4-openssl-dev \
+               libatomic1 uuid-dev openssl libcurl4-openssl-dev libhwloc-dev \
                libfreetype-dev libssl-dev libjemalloc-dev libimath-dev
                
 apt-get -y install python-is-python3 python3-jinja2 python3-pip pyside2-tools python3-numpy qtbase5-dev-tools

@@ -25,6 +25,7 @@
             },
             "cacheVariables": {
                 "CMAKE_PREFIX_PATH": "$env{DEPS_ROOT}",
+                "CMAKE_MODULE_PATH": "$env{DEPS_ROOT}/lib/cmake",
                 "PYTHON_EXECUTABLE": "python3",
                 "BOOST_PYTHON_COMPONENT_NAME": "python311",
                 "ABI_VERSION": "0"

@@ -11,7 +11,7 @@ project(openmoonray_third_party)
 
 include(ExternalProject)
 
-set(InstallRoot /opt/MoonRay/installs CACHE FILEPATH "Install root for dependencies")
+set(InstallRoot /home/guillaume/Projects/MoonRay/installs CACHE FILEPATH "Install root for dependencies")
 
 ExternalProject_Add(JsonCpp
     GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
@@ -27,26 +27,14 @@ ExternalProject_Add(JsonCpp
 )
 set(CHAIN JsonCpp)
 
-ExternalProject_Add(Boost
-    URL https://sourceforge.net/projects/boost/files/boost/1.78.0/boost_1_78_0.tar.gz
-    UPDATE_COMMAND ./bootstrap.sh --prefix=${InstallRoot}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ./b2 install ${JOBS_ARG} --with_python variant=release link=shared threading=multi define=BOOST_UNORDERED_HAVE_PIECEWISE_CONSTRUCT=0
-    BUILD_IN_SOURCE 1
-    INSTALL_COMMAND ""
-    DOWNLOAD_EXTRACT_TIMESTAMP True
-    DEPENDS ${CHAIN}
-)
-set(CHAIN Boost)
-
 ExternalProject_Add(TBB
     GIT_REPOSITORY https://github.com/uxlfoundation/oneTBB
-    GIT_TAG eca91f16d7490a8abfdee652dadf457ec820cc37 # v2020.3
+    GIT_TAG 81e4471d1191c75e0a78311c584b64b6591da842 # v2020.3.3
     DOWNLOAD_EXTRACT_TIMESTAMP True
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND make tbb tbbmalloc tbbproxy ${JOBS_ARG}
-    INSTALL_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install_tbb_2020.3.sh ${CMAKE_CURRENT_BINARY_DIR} ${InstallRoot}
+    BUILD_COMMAND make tbb tbbmalloc tbbproxy tbbbind ${JOBS_ARG}
+    INSTALL_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install_tbb_2020.3.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${InstallRoot}
     DEPENDS ${CHAIN}
 )
 set(CHAIN TBB)
@@ -63,6 +51,18 @@ ExternalProject_Add(Random123
 )
 set(CHAIN Random123)
 
+ExternalProject_Add(Boost
+    URL https://sourceforge.net/projects/boost/files/boost/1.78.0/boost_1_78_0.tar.gz
+    UPDATE_COMMAND ./bootstrap.sh --prefix=${InstallRoot}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ./b2 install ${JOBS_ARG} --with_python variant=release link=shared threading=multi define=BOOST_UNORDERED_HAVE_PIECEWISE_CONSTRUCT=0
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND ""
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    DEPENDS ${CHAIN}
+)
+set(CHAIN Boost)
+
 ExternalProject_Add(OpenVDB
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openvdb
     GIT_TAG ab935574cdb25c3df66b068fce2a3b0a74281c54 # v9.1.0
@@ -71,12 +71,8 @@ ExternalProject_Add(OpenVDB
     DOWNLOAD_EXTRACT_TIMESTAMP True
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-        -DTBB_ROOT=${InstallRoot}
-        -DTBB_LIBRARYDIR=${InstallRoot}/lib
-        -DTBB_INCLUDEDIR=${InstallRoot}/include
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
         -DTBB_USE_STATIC_LIBS=NO
-        -DBoost_LIBRARY_DIR=${InstallRoot}/lib
-        -DBoost_INCLUDE_DIR=${InstallRoot}/include
     DEPENDS ${CHAIN}
 )
 set(CHAIN OpenVDB)
@@ -99,6 +95,7 @@ ExternalProject_Add(embree
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
         -DEMBREE_ISPC_EXECUTABLE=<INSTALL_DIR>/bin/ispc
         -DEMBREE_ISPC_SUPPORT=ON
         -DEMBREE_IGNORE_INVALID_RAYS=ON
@@ -117,6 +114,7 @@ ExternalProject_Add(OpenSubdiv
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+      -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
       -DCMAKE_BUILD_TYPE=Release
       -DNO_PTEX=1 -DNO_OMP=1 -DNO_TBB=1 -DNO_CUDA=1 -DNO_GLFW_X11=1 -DNO_DOC=1
       -DNO_OPENCL=1 -DNO_CLEW=1 -DNO_REGRESSION=1 -DNO_EXAMPLES=1 -DNO_TUTORIALS=1 -DNO_GLTESTS=1
@@ -133,9 +131,8 @@ ExternalProject_Add(OpenEXR
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
         -DBUILD_SHARED_LIBS=OFF
-        -DBoost_LIBRARY_DIR=${InstallRoot}/lib
-        -DBoost_INCLUDE_DIR=${InstallRoot}/include
 DEPENDS ${CHAIN}
 )
 set(CHAIN OpenEXR)
@@ -153,6 +150,7 @@ ExternalProject_Add(OpenColorIO
         -DOCIO_USE_SSE=OFF
         -DOCIO_BUILD_PYTHON=OFF
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake        
         -DBUILD_SHARED_LIBS=ON
         -DOCIO_BUILD_STATIC=OFF
         -DCMAKE_CXX_STANDARD=17
@@ -168,6 +166,7 @@ ExternalProject_Add(OpenImageIO
     CMAKE_ARGS
         -DOpenEXR_ROOT=<INSTALL_DIR>
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake        
         -DUSE_QT=0
         -DUSE_PYTHON=0
         -DOIIO_BUILD_TOOLS=0
@@ -182,8 +181,8 @@ ExternalProject_Add(OpenImageDenoise
     INSTALL_DIR ${InstallRoot}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
         -DISPC_EXECUTABLE=<INSTALL_DIR>/bin/ispc
-        -DTBB_ROOT=<INSTALL_DIR>
         -DOIDN_APPS=OFF
     DEPENDS ${CHAIN}
 )
@@ -199,16 +198,12 @@ if(NOT NO_USD)
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_PREFIX_PATH=<INSTALL_DIR>
+            -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
             -DPXR_ENABLE_PYTHON_SUPPORT=ON
             -DPXR_USE_PYTHON_3=ON
-            -DPYTHON_LIBRARIES=/usr/lib64
+            -DPYTHON_LIBRARIES=/usr/lib
             -DPYTHON_INCLUDE_DIRS=/usr/include
-            -DBoost_LIBRARY_DIR=${InstallRoot}/lib
-            -DBoost_INCLUDE_DIR=${InstallRoot}/include
             -DTBB_USE_DEBUG_BUILD=OFF
-            -DTBB_ROOT_DIR=${InstallRoot}
-            -DTBB_LIBRARIES=${InstallRoot}/lib
-            -DTBB_INCLUDE_DIRS=${InstallRoot}/include
             -DPXR_BUILD_TESTS=OFF
             -DPXR_BUILD_EXAMPLES=OFF
             -DPXR_BUILD_TUTORIALS=OFF
@@ -216,9 +211,6 @@ if(NOT NO_USD)
             -DPXR_ENABLE_PTEX_SUPPORT=OFF
             -DPXR_ENABLE_OPENVDB_SUPPORT=OFF
             -DPXR_BUILD_USDVIEW=OFF
-            -DBoost_NO_BOOST_CMAKE=ON
-            -DBoost_NO_SYSTEM_PATHS=ON
-            -DTBB_SUPPRESS_DEPRECATED_MESSAGES=1
         DEPENDS ${CHAIN}
     )
     set(CHAIN USD)
