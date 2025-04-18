@@ -11,7 +11,7 @@ project(openmoonray_third_party)
 
 include(ExternalProject)
 
-set(InstallRoot /home/guillaume/Projects/MoonRay/installs CACHE FILEPATH "Install root for dependencies")
+set(InstallRoot /opt/MoonRay/installs CACHE FILEPATH "Install root for dependencies")
 
 ExternalProject_Add(JsonCpp
     GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
@@ -62,6 +62,20 @@ ExternalProject_Add(Boost
     DEPENDS ${CHAIN}
 )
 set(CHAIN Boost)
+
+ExternalProject_Add(Imath
+    GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/Imath
+    GIT_TAG c0396a055a01bc537d32f435aee11a9b7ed6f0b5 # v3.1.12
+    INSTALL_DIR ${InstallRoot}
+    DOWNLOAD_EXTRACT_TIMESTAMP True
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
+        -DTBB_USE_STATIC_LIBS=NO
+    DEPENDS ${CHAIN}
+)
+set(CHAIN Imath)
+
 
 ExternalProject_Add(OpenVDB
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openvdb
@@ -201,8 +215,9 @@ if(NOT NO_USD)
             -DCMAKE_MODULE_PATH::PATH=<INSTALL_DIR>/lib/cmake
             -DPXR_ENABLE_PYTHON_SUPPORT=ON
             -DPXR_USE_PYTHON_3=ON
-            -DPYTHON_LIBRARIES=/usr/lib
-            -DPYTHON_INCLUDE_DIRS=/usr/include
+            -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.11.so
+            -DPYTHON_INCLUDE_DIR=/usr/include/python3.11
+            -DPXR_PY_UNDEFINED_DYNAMIC_LOOKUP=ON
             -DTBB_USE_DEBUG_BUILD=OFF
             -DPXR_BUILD_TESTS=OFF
             -DPXR_BUILD_EXAMPLES=OFF
