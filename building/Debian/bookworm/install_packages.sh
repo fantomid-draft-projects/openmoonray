@@ -36,7 +36,8 @@ fi
 
 apt-get -y install build-essential git
 
-apt-get -y install libglvnd-dev libcgroup2 libcgroup-dev #2.0.2-2
+apt-get -y install libglvnd-dev # 1.6.0-1
+apt-get -y install libcgroup2 libcgroup-dev # 2.0.2-2
 
 apt-get -y install bison flex wget git python3 python3-dev patch \
                libgif-dev libmng-dev libtiff5-dev libjpeg62-turbo-dev \
@@ -48,14 +49,13 @@ apt-get -y install python-is-python3 python3-jinja2 python3-pip pyside2-tools py
 mkdir -p /installs/{bin,lib,include}
 cd /installs
 
-apt-get -y install cmake #3.25.1
+apt-get -y install cmake # 3.25.1
 
-apt-get -y install libblosc-dev #1.21.3
-apt-get -y install libtbb-dev # 2021.8.0-2
+apt-get -y install libblosc-dev # 1.21.3
 apt-get -y install lua5.4 liblua5.4-dev
-apt-get -y install liblog4cplus-dev #2.0.8-1
-apt-get -y install libcppunit-dev #1.15.1-4
-apt-get -y install libmicrohttpd-dev #0.9.75-6
+apt-get -y install liblog4cplus-dev # 2.0.8-1
+apt-get -y install libcppunit-dev # 1.15.1-4
+apt-get -y install libmicrohttpd-dev # 0.9.75-6
 
 # not required if you are not building the GUI apps
 if [ $install_qt -eq 1 ]
