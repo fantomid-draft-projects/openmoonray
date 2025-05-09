@@ -21,6 +21,7 @@
                 "PXR_USD_LOCATION"              : "$env{DEPS_ROOT}",
                 "PXR_INCLUDE_DIRS"              : "$env{DEPS_ROOT}/include",
                 "Random123_ROOT"                : "$env{DEPS_ROOT}",
+                "TBB_ROOT"                      : "$env{DEPS_ROOT}",
                 "ZLIB_ROOT"                     : "$env{DEPS_ROOT}"
             },
             "cacheVariables": {
