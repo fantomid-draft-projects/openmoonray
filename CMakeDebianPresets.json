@@ -40,8 +40,19 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceParentDir}/../installs/openmoonray",
-                "MOONRAY_USE_CUDA": "NO",
                 "MOONRAY_USE_OPTIX": "NO"
+            },
+            "generator": "Unix Makefiles"
+        },
+        {
+            "name": "debian-bookworm-release-gpu",
+            "displayName": "Debian Bookworm Release GPU",
+            "inherits": "debian-bookworm-environment",
+            "binaryDir": "$env{BUILD_DIR}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceParentDir}/../installs/openmoonray",
+                "MOONRAY_USE_OPTIX": "YES"
             },
             "generator": "Unix Makefiles"
         }
@@ -51,6 +62,13 @@
             "name": "debian-bookworm-release",
             "displayName": "Debian Bookworm Release",
             "configurePreset": "debian-bookworm-release",
+            "configuration": "Release",
+            "targets": ["install"]
+        },
+        {
+            "name": "debian-bookworm-release-gpu",
+            "displayName": "Debian Bookworm Release GPU",
+            "configurePreset": "debian-bookworm-release-gpu",
             "configuration": "Release",
             "targets": ["install"]
         }
