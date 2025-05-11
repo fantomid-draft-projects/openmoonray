@@ -28,10 +28,12 @@ done
 
 
 # not required if you are not building with GPU support
+# install
 if [ $install_cuda -eq 1 ] 
 then
-    wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
-    sh cuda_11.8.0_520.61.05_linux.run
+    mkdir /opt/MoonRay/tmp
+    wget https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run
+    sh cuda_12.1.0_530.30.02_linux.run --tmpdir=/opt/MoonRay/tmp
 fi
 
 apt-get -y install build-essential git
@@ -64,6 +66,6 @@ then
 fi
 
 if [ $install_cuda -eq 1 ]
-	export PATH=/usr/local/cuda/bin:${PATH}
-	export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+	export PATH=/usr/local/cuda-12.1/bin:${PATH}
+	export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:${LD_LIBRARY_PATH}
 fi
