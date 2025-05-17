@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -eq 4 ] ; then
-    echo 'Current source directoryn source and install directories are mandatory !'
+    echo 'Current source directory, build-deps directory and install directory are mandatory !'
     exit 1
 fi
 
