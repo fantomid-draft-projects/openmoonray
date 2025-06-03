@@ -28,12 +28,14 @@ done
 
 
 # not required if you are not building with GPU support
-# install only the include files and the libraries
+# don't install the driver, install only the include files and the libraries
 if [ $install_cuda -eq 1 ] 
 then
     echo "CUDA 12.1 installation, don't install the driver"
     wget https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run
     sh cuda_12.1.0_530.30.02_linux.run --tmpdir=/opt/MoonRay/tmp
+    # install optix engine ?
+    # apt-get -y install libnvoptix1
 fi
 
 apt-get -y install build-essential git

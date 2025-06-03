@@ -1,8 +1,7 @@
 #!/bin/sh
 
-only_cpu=0
-if [ $# -lt 3 ] ; then
-    echo "MoonRay source and install directories are mandatory to create the Debian's package !"
+if [ $# -lt 4 ] ; then
+    echo "MoonRay source, install directories and package's type are mandatory to create the Debian's package !"
     exit 1
 fi
 
@@ -21,14 +20,18 @@ if [ ! -d "$2/openmoonray" ]; then
     exit
 fi
 
-# We consider that the last argument is --cpu 
-if [ $# -eq 4 ] ; then
+if [ $3 -eq "cpu"]
+then
     PACKAGE_DIR=$1/building/Debian/bookworm/package
     PACKAGE_NAME=moonray
-else
+elif [ $3 -eq "xpu"]
+then
     PACKAGE_DIR=$1/building/Debian/bookworm/package-xpu
     PACKAGE_NAME=moonray-xpu
-fi 
+else
+    echo "$3 is invalid, package's type could be cpu or xpu, can't create the Debian's package."
+    exit
+fi
 
 cd $PACKAGE_DIR
 
@@ -37,6 +40,9 @@ cp -r $2/* moonray/opt/MoonRay/installs
 
 dpkg-deb --build $PACKAGE_NAME
 VERSION=`dpkg -I $PACKAGE_NAME.deb | grep Version | cut -d ":" -f 2 | sed 's/ //g'`
-mv $PACKAGE_NAME.deb $PACKAGE_NAME-v$VERSION.deb
+ARCH=`dpkg --print-architecture`
+mv $PACKAGE_NAME.deb $PACKAGE_NAME\_$VERSION\_$ARCH.deb
 
 rm -rf moonray/opt
+
+cd -

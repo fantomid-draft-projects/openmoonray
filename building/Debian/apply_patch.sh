@@ -4,5 +4,5 @@ read major minor < <(echo $VERSION | ( IFS=".$IFS" ; read a b && echo $a $b ))
 
 if [ $major -eq 12 ] 
 then
-    exec $SCRIPT_DIR/bookworm/install_packages.sh "$@"
+    exec $SCRIPT_DIR/bookworm/apply_patch.sh "$@"
 fi
