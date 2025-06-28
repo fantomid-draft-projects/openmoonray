@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 VERSION=`cat /etc/debian_version`
 read major minor < <(echo $VERSION | ( IFS=".$IFS" ; read a b && echo $a $b ))
@@ -23,7 +25,7 @@ if [ ! -d "$2/openmoonray" ]; then
 fi
 
 
-IS_GPU=`nm -C $2/openmoonray/lib/librendering_rt.so | grep 'moonray::rt::OptixGPUInstance::OptixGPUInstance' | wc -l`
+IS_GPU=`nm -C $2/openmoonray/lib/librendering_rt.so | grep 'moonray::rt::OptixGPUInstance::build' | wc -l`
 
 if [ $major -eq 12 ] 
 then

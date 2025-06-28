@@ -14,6 +14,9 @@ patch -p1 < $1/building/Debian/bookworm/patch/arras4_core.patch
 cd $1/moonray/hydra/hdMoonray
 patch -p1 < $1/building/Debian/bookworm/patch/hdMoonray.patch
 
+cd $1/moonray/mcrt_denoise
+patch -p1 < $1/building/Debian/bookworm/patch/mcrt_denoise.patch
+
 cd $1/moonray/moonray_arras/mcrt_computation
 patch -p1 < $1/building/Debian/bookworm/patch/mcrt_computation.patch
 
